@@ -24,7 +24,7 @@ var pokemonRepository = (function() {
     var $button = $('<button class="my-class">' + pokemon.name + "</button>");
     $listItem.append($button);
     $pokemonList.append($listItem);
-    button.on("click", function(event) {
+    $button.on("click", function(event) {
       showDetails(pokemon);
     });
   }
@@ -45,6 +45,7 @@ var pokemonRepository = (function() {
             detailsUrl: item.url
           };
           add(pokemon);
+          console.log(pokemon);
         });
       })
       .catch(function(error) {
