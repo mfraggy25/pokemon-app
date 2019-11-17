@@ -1,7 +1,6 @@
-let pokemonRepository = (function() {
-  let repository = [];
-  let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
-
+var pokemonRepository = (function() {
+  var repository = [];
+  var apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
   function add(pokemon) {
     if (
       typeof pokemon === "object" &&
@@ -13,18 +12,19 @@ let pokemonRepository = (function() {
       console.log("add an object");
     }
   }
-
   function getAll() {
     return repository;
   }
-
   function addListItem(pokemon) {
-    let $pokemonList = $(".pokemon-list");
-    let $listItem = $("<li>");
-    let $button = $('<button class="my-class">' + pokemon.name + "</button>");
-    $listItem.append($button);
+    var $listItem = $("<li></li>");
     $pokemonList.append($listItem);
-    $button.on("click", function(event) {
+    var $button = $(
+      '<button type="button" id="pokemon-button" class="btn btn-outline-light" data-toggle="modal" data-target="#exampleModalCenter">' +
+        pokemon.name +
+        "</button>"
+    );
+    $listItem.append($button);
+    $button.on("click", function() {
       showDetails(pokemon);
     });
   }
@@ -35,12 +35,11 @@ let pokemonRepository = (function() {
       showModal(item);
     });
   }
-
   function loadList() {
     return $.ajax(apiUrl)
       .then(function(json) {
         json.results.forEach(function(item) {
-          let pokemon = {
+          var pokemon = {
             name: item.name,
             detailsUrl: item.url
           };
@@ -54,13 +53,13 @@ let pokemonRepository = (function() {
   }
 
   function loadDetails(item) {
-    let url = item.detailsUrl;
+    var url = item.detailsUrl;
     return $.ajax(url)
       .then(function(details) {
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
         item.types = [];
-        for (let i = 0; i < details.types.length; i++) {
+        for (var i = 0; i < details.types.length; i++) {
           item.types.push(details.types[i].type.name);
         }
       })
@@ -70,43 +69,20 @@ let pokemonRepository = (function() {
   }
 
   function showModal(item) {
-    let $modalContainer = $("#modal-container");
-    $modalContainer.empty();
-    let modal = $('<div class="modal"></div>');
-    let closeButtonElement = $('<button class="modal-close">Close</button>');
-    closeButtonElement.on("click", hideModal);
-    let nameElement = $("<h1>" + item.name + "<h1>");
-    let imageElement = $('<img src="' + item.imageUrl + '">');
-    let heightElement = $("<p>" + "Height: " + item.height + "</p>");
-    let typesElement = $("<p>" + "types : " + item.types + "</p>");
-    modal.append(closeButtonElement);
-    modal.append(nameElement);
-    modal.append(imageElement);
-    modal.append(heightElement);
-    modal.append(typesElement);
-    $modalContainer.append(modal);
-    $modalContainer.addClass("is-visible");
+    var modalBody = $(".modal-body");
+    var modalTitle = $(".modal-title");
+    modalTitle.empty();
+    modalBody.empty();
+    var nameElement = $("<h1>" + item.name + "</h1>");
+    var imageElement = $('<img src="' + item.imageUrl + '">');
+    $("div.pokemon-img").html($imageElement);
+    var heightElement = $("<p>" + "height : " + item.height + "</p>");
+    var typesElement = $("<p>" + "types : " + item.types + "</p>");
+    modalTitle.append(nameElement);
+    modalBody.append(imageElement);
+    modalBody.append(heightElement);
+    modalBody.append(typesElement);
   }
-
-  function hideModal() {
-    let $modalContainer = $("#modal-container");
-    $modalContainer.removeClass("is-visible");
-  }
-
-  jQuery(window).on("keydown", e => {
-    let $modalContainer = $("#modal-container");
-    if (e.key === "Escape" && $modalContainer.hasClass("is-visible")) {
-      hideModal();
-    }
-  });
-
-  let $modalContainer = document.querySelector("#modal-container");
-  $modalContainer.addEventListener("click", e => {
-    let target = e.target;
-    if (target === $modalContainer) {
-      hideModal();
-    }
-  });
 
   return {
     add: add,
@@ -114,11 +90,9 @@ let pokemonRepository = (function() {
     addListItem: addListItem,
     loadList: loadList,
     loadDetails: loadDetails,
-    showModal: showModal,
-    hideModal: hideModal
+    showModal: showModal
   };
 })();
-
 pokemonRepository.loadList().then(function() {
   pokemonRepository.getAll().forEach(function(pokemon) {
     pokemonRepository.addListItem(pokemon);
