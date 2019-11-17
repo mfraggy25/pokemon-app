@@ -1,6 +1,6 @@
-var pokemonRepository = (function() {
-  var repository = [];
-  var apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+let pokemonRepository = (function() {
+  let repository = [];
+  let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
 
   function add(pokemon) {
     if (
@@ -19,9 +19,9 @@ var pokemonRepository = (function() {
   }
 
   function addListItem(pokemon) {
-    var $pokemonList = $(".pokemon-list");
-    var $listItem = $("<li>");
-    var $button = $('<button class="my-class">' + pokemon.name + "</button>");
+    let $pokemonList = $(".pokemon-list");
+    let $listItem = $("<li>");
+    let $button = $('<button class="my-class">' + pokemon.name + "</button>");
     $listItem.append($button);
     $pokemonList.append($listItem);
     $button.on("click", function(event) {
@@ -37,10 +37,10 @@ var pokemonRepository = (function() {
   }
 
   function loadList() {
-    return $.ajax(apiUrl, { dataType: "json" })
-      .then(function(item) {
-        $.each(item.results, function(item) {
-          var pokemon = {
+    return $.ajax(apiUrl)
+      .then(function(json) {
+        json.results.forEach(function(item) {
+          let pokemon = {
             name: item.name,
             detailsUrl: item.url
           };
@@ -48,18 +48,21 @@ var pokemonRepository = (function() {
           console.log(pokemon);
         });
       })
-      .catch(function(error) {
-        document.write(error);
+      .catch(function(e) {
+        console.error(e);
       });
   }
 
   function loadDetails(item) {
-    var url = item.detailsUrl;
+    let url = item.detailsUrl;
     return $.ajax(url)
       .then(function(details) {
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
         item.types = [];
+        for (let i = 0; i < details.types.length; i++) {
+          item.types.push(details.types[i].type.name);
+        }
       })
       .catch(function(e) {
         console.error(e);
@@ -67,38 +70,39 @@ var pokemonRepository = (function() {
   }
 
   function showModal(item) {
-    var $modalContainer = $("#modal-container");
+    let $modalContainer = $("#modal-container");
     $modalContainer.empty();
-    var modal = $('<div class="modal"></div>');
-    var closeButtonElement = $('<button class="modal-close">Close</button>');
+    let modal = $('<div class="modal"></div>');
+    let closeButtonElement = $('<button class="modal-close">Close</button>');
     closeButtonElement.on("click", hideModal);
-    var $nameElement = $("h1");
-    $nameElement.html(item.name.charAt(0).toUpperCase() + item.name.slice(1));
-    var $imageElement = $('<img src="' + item.imageUrl + '">');
-    $("div.pokemon-img").html($imageElement);
-    var $heightElement = $("div.pokemon-info");
-    $heightElement.html("Height: " + item.height);
-    var $typesElement = $("div.pokemon-info");
-    $typesElement.html("types : " + item.types);
+    let nameElement = $("<h1>" + item.name + "<h1>");
+    let imageElement = $('<img src="' + item.imageUrl + '">');
+    let heightElement = $("<p>" + "Height: " + item.height + "</p>");
+    let typesElement = $("<p>" + "types : " + item.types + "</p>");
+    modal.append(closeButtonElement);
+    modal.append(nameElement);
+    modal.append(imageElement);
+    modal.append(heightElement);
+    modal.append(typesElement);
     $modalContainer.append(modal);
     $modalContainer.addClass("is-visible");
   }
 
   function hideModal() {
-    var $modalContainer = $("#modal-container");
+    let $modalContainer = $("#modal-container");
     $modalContainer.removeClass("is-visible");
   }
 
   jQuery(window).on("keydown", e => {
-    var $modalContainer = $("#modal-container");
+    let $modalContainer = $("#modal-container");
     if (e.key === "Escape" && $modalContainer.hasClass("is-visible")) {
       hideModal();
     }
   });
 
-  var $modalContainer = document.querySelector("#modal-container");
+  let $modalContainer = document.querySelector("#modal-container");
   $modalContainer.addEventListener("click", e => {
-    var target = e.target;
+    let target = e.target;
     if (target === $modalContainer) {
       hideModal();
     }
