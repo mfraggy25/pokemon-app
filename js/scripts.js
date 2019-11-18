@@ -19,7 +19,7 @@ let pokemonRepository = (function() {
   function addListItem(pokemon) {
     let $pokemonList = $(".pokemon-list");
     let listItem = $(
-      '<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal"></button>'
+      '<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModal"></button>'
     );
     listItem.text(pokemon.name);
     $pokemonList.append(listItem);
@@ -72,7 +72,9 @@ let pokemonRepository = (function() {
     let modalTitle = $(".modal-title");
     modalTitle.empty();
     modalBody.empty();
-    let nameElement = $("<h1>" + item.name + "</h1>");
+    let nameElement = $(".modal-title").text(
+      item.name.charAt(0).toUpperCase() + item.name.slice(1)
+    );
     let imageElement = $('<img src="' + item.imageUrl + '">');
     imageElement.attr("src", item.imageUrl);
     let heightElement = $("<p>" + "height : " + item.height + "</p>");
