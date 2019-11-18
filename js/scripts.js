@@ -15,7 +15,9 @@ let pokemonRepository = (function() {
   function getAll() {
     return repository;
   }
+
   function addListItem(pokemon) {
+    let $pokemonList = $(".pokemon-list");
     let listItem = $(
       '<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#pokemon-modal"></button>'
     );
