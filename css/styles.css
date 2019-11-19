@@ -66,7 +66,7 @@ p {
   transition-property: opacity;
 }
 
-.pokemon-list:hover {
+.my-class:hover {
   background-color: var(--button-color);
   color: white;
 }
@@ -76,7 +76,6 @@ p {
 }
 
 #modal-container.is-visible {
-  position: fixed;
   padding: 0px;
   box-sizing: border-box;
   top: 0;
@@ -95,7 +94,6 @@ p {
 
 .modal {
   margin: auto;
-  display: inline-block;
   box-sizing: border-box;
   background: rgb(209, 109, 109);
   padding: 15px;
