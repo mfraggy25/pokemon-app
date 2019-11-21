@@ -1,6 +1,7 @@
 let pokemonRepository = (function() {
   let repository = [];
   let apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+  //Function to add new Pokemon data
   function add(pokemon) {
     if (
       typeof pokemon === "object" &&
@@ -12,28 +13,33 @@ let pokemonRepository = (function() {
       console.log("add an object");
     }
   }
+  //Function to pull all Pokemon data
   function getAll() {
     return repository;
   }
-
+  //Function to add list for each pokemon object
   function addListItem(pokemon) {
     let $pokemonList = $(".pokemon-list");
     let listItem = $(
       '<button type="button" class="pokemon-list_item list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModal"></button>'
     );
+    // Adds Pokemon name to text within button
     listItem.text(pokemon.name);
+    // Adds the 'li' to 'ul' with pokemonList class in index file
     $pokemonList.append(listItem);
+    // Calls showDetails function when button is clicked
     listItem.click(function() {
       showDetails(pokemon);
     });
   }
-
+  // Function to show details of each Pokemon
   function showDetails(item) {
     pokemonRepository.loadDetails(item).then(function() {
       console.log(item);
       showModal(item);
     });
   }
+  //Function to load pokemon list from API
   function loadList() {
     return $.ajax(apiUrl)
       .then(function(json) {
@@ -55,6 +61,7 @@ let pokemonRepository = (function() {
     let url = item.detailsUrl;
     return $.ajax(url)
       .then(function(details) {
+        // Now we add the details to the item
         item.imageUrl = details.sprites.front_default;
         item.height = details.height;
         item.types = [];
@@ -95,6 +102,7 @@ let pokemonRepository = (function() {
   };
 })();
 
+// Add search bar
 $(document).ready(function() {
   $("#pokemon-search").on("keyup", function() {
     var value = $(this).val();
@@ -108,7 +116,9 @@ $(document).ready(function() {
   });
 });
 
+// forEach Used To cycle through addListItem function properties
 pokemonRepository.loadList().then(function() {
+  // Now the data is loaded
   pokemonRepository.getAll().forEach(function(pokemon) {
     pokemonRepository.addListItem(pokemon);
   });
