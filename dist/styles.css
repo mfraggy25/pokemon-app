@@ -53,6 +53,9 @@ p {
   transition-duration: 0.4s;
   transition-property: opacity;
 }
+.page-container {
+  margin-top: 60px;
+}
 .my-class:hover {
   background-color: var(--button-color);
   color: #fff;
